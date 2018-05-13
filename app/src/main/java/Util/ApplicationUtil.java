@@ -35,7 +35,7 @@ public class ApplicationUtil extends Application {
     private PrintWriter pw=null;
     private BufferedReader br=null;
     private String user=null;
-    public static String serverIP="10.0.2.2";
+    public static String serverIP="10.5.80.17";
     private List<myMessage> myMessageList;
     private ArrayList<String>Friends;
     private ArrayList<String>Groups;

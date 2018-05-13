@@ -37,11 +37,6 @@ public class MyService extends Service {
 
     @Override
     public void onCreate() {
-
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
         final ApplicationUtil appUtil=(ApplicationUtil)MyService.this.getApplication();
         new Thread(new Runnable() {
             @Override
@@ -53,8 +48,8 @@ public class MyService extends Service {
                         //接受服务器转发的消息
                         DS.receive(receiveDP);
                         String msg=new String(receiveDP.getData(),0,receiveDP.getLength());
-                        Log.v("arki","received");
-                        Log.v("arki",msg);
+                        // Log.v("arki","received");
+                       // Log.v("arki",msg);
                         String[] str=msg.split("-");
                         myMessage m=null;
                         if(str[0].equals("Friend")){
@@ -65,7 +60,7 @@ public class MyService extends Service {
                         synchronized (appUtil.getMyMessageList()) {
                             appUtil.addToMsgList(m);
                         }
-                        Intent intent=new Intent();
+                        Intent intent=new Intent("auto");
                         intent.putExtra("auto",msg);//refresh info
                         sendBroadcast(intent);
                     }
@@ -74,6 +69,12 @@ public class MyService extends Service {
                 }
             }
         }).start();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
 
         return super.onStartCommand(intent, flags, startId);
     }

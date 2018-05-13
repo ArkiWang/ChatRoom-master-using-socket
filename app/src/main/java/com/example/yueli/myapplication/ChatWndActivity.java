@@ -1,5 +1,6 @@
 package com.example.yueli.myapplication;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 
 import android.content.IntentFilter;
@@ -56,6 +57,7 @@ public class ChatWndActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         autoBroadCastReceiver=new MyAutoBroadCastReceiver();
         IntentFilter autoBroadFilter=new IntentFilter();
         autoBroadFilter.addAction("auto");
@@ -63,24 +65,31 @@ public class ChatWndActivity extends AppCompatActivity {
         autoBroadCastReceiver.setOnAutoReceiveListener(new MyAutoBroadCastReceiver.OnAutoReceiveListener() {
             @Override
             public void onReceive(String msg) {//String msg是传过来的
-                myMessageList.clear();
+                Log.v("arki",msg);
                 if(group.equals("Friends")) {
-                    myMessageList.addAll(getFriendMsg(child));
+                    if(!getFriendMsg(child).equals(myMessageList)) {
+                        myMessageList.clear();
+                        myMessageList.addAll(getFriendMsg(child));
+                        adapter.notifyDataSetChanged();
+                        Log.v("arki",msg+" changed");
+                    }
                 }else if(group.equals("Groups")){
+                    myMessageList.clear();
                     myMessageList.addAll(getGroupMsg(child));
+                    adapter.notifyDataSetChanged();
                 }
-                adapter.notifyDataSetChanged();
             }
         });
         flag=true;
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
         if (flag) {
             unregisterReceiver(autoBroadCastReceiver);
+            flag=false;
         }
+        super.onDestroy();
     }
 
     @Override
@@ -118,12 +127,16 @@ public class ChatWndActivity extends AppCompatActivity {
                 myMessage m=null;
                 if(group.equals("Friends")) {
                     m = new myMessage(user, msg, true,child, null);
-                    appUtil.addToMsgList(m);
+                    synchronized (appUtil.getMyMessageList()) {
+                        appUtil.addToMsgList(m);
+                    }
                     myMessageList.clear();
                     myMessageList.addAll(getFriendMsg(child));
                 }else if(group.equals("Groups")){
                     m=new myMessage(user,msg,true,null,child);
-                    appUtil.addToMsgList(m);
+                    synchronized (appUtil.getMyMessageList()) {
+                        appUtil.addToMsgList(m);
+                    }
                     myMessageList.clear();
                     myMessageList.addAll(getGroupMsg(child));
                 }
@@ -144,7 +157,7 @@ public class ChatWndActivity extends AppCompatActivity {
         for(int i = 0; i<appUtil.getMyMessageList().size(); i++){
             myMessage m=appUtil.getMyMessageList().get(i);
            if( m.getFromName().equals(friend)||m.getToName().equals(friend)){
-               Msg.add(appUtil.getMyMessageList().get(i));
+               Msg.add(m);
            }
         }
         return Msg;

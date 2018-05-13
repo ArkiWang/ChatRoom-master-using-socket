@@ -44,6 +44,10 @@
             android:name=".Service.MyService"
             android:enabled="true"
             android:exported="true" />
+        <receiver android:name=".BroadCast.MyAutoBroadCastReceiver"
+            android:enabled="true">
+
+        </receiver>
 
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AddActivity" />

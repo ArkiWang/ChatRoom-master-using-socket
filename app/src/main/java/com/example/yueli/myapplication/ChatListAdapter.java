@@ -1,6 +1,7 @@
 package com.example.yueli.myapplication;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,11 +45,15 @@ public class ChatListAdapter extends BaseAdapter {
         if(m.isSelf()){
             convertView=View.inflate(context,R.layout.list_item_msg_right,null);
             mText=(TextView)convertView.findViewById(R.id.tv_msg_right);
+            mText.setText(m.getMessage());
+            Log.v("arki","right "+m.getMessage());
+
         }else{
             convertView=View.inflate(context,R.layout.list_item_msg_left,null);
             mText=(TextView)convertView.findViewById(R.id.tv_msg_left);
+            mText.setText(m.getMessage());
+            Log.v("arki","left "+m.getMessage());
         }
-        mText.setText(m.getMessage());
         return convertView;
     }
 }
