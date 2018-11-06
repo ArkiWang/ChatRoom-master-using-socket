@@ -35,8 +35,8 @@ public class Server {
         //加载驱动器
         Class.forName("com.mysql.jdbc.Driver");
         String url="jdbc:mysql://localhost:3306/ChatRoom";
-        String user="root";
-        String password="210028";
+        String user="***";
+        String password="***";
         con=DriverManager.getConnection(url+"?useSSL=false",user,password);
         serverSocket = new ServerSocket(TCP_port);
         TCPService = Executors.newFixedThreadPool(
